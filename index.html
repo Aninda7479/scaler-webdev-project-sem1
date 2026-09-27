@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Audio Journal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.css" />
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <header>
+        <p>Voice Journal</p>
+        <h1>Talk messy, read clean.</h1>
+    </header>
+
+    <div class="mic">
+        <button id="mic-btn" aria-label="Toggle voice recording">
+            <i class="icon-mic" font-size="32"></i>
+        </button>
+        <p id="status">Tap the mic to start speaking</p>
+    </div>
+
+    <div id="list" class="list" aria-live="polite">
+
+        <!-- <div class="card">
+            <div class="topbar"><time>Sun, Sep 27, 1:11 AM</time>
+                <div class="top-info"><span>5 words</span><button class="del"> <i class="icon-trash"></i> Delete</button></div>
+            </div>
+            <section>
+                <p>Guys, how are you?</p>
+            </section>
+        </div> -->
+
+    </div>
+
+    <footer>
+        Built by <a href="https://github.com/Aninda7479" target="_blank" >Aninda 💗</a>
+    </footer>
+
+
+    <script src="./script.js"></script>
+</body>
+
+</html>

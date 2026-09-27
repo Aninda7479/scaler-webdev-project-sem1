@@ -1,0 +1,160 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+
+    background-color: #f5f5f7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    margin-top: 30px;
+}
+
+header p {
+    color: #0071e3;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+}
+
+header h1 {
+    font-weight: 600;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.mic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.mic button {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07), 0 0 0 1px #0000000f;
+
+}
+
+.mic button:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 0 0 1px #0000000f;
+}
+
+.mic button.recording {
+    background-color: #ff3b30;
+    color: white;
+    animation: pulse-ring 2s infinite ease-out;
+
+}
+
+.icon-mic {
+    font-size: 2rem;
+    color: #0071e3;
+}
+
+.mic #status {
+    font-size: 0.9rem;
+    color: #86868b;
+}
+
+.list {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.list .card {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid #0000000f;
+    border-radius: 20px;
+    padding: 1.5rem 1.75rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.list .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #86868b;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #0000000f;
+    padding-bottom: 0.75rem;
+}
+
+.list .topbar .top-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.list .topbar .top-info .del {
+    background: none;
+    border: none;
+    color: #86868b;
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.list .topbar .top-info .del:hover {
+    background-color: rgba(255, 59, 48, 0.08);
+    color: #ff3b30;
+}
+
+.list section {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #2c2c2e;
+}
+
+
+@keyframes pulse-ring {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4), 0 4px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    70% {
+        box-shadow: 0 0 0 14px rgba(255, 59, 48, 0), 0 4px 20px rgba(0, 0, 0, 0.07);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0), 0 4px 20px rgba(0, 0, 0, 0.07);
+    }
+}
+
+footer {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #86868b;
+}
+
+footer a {
+    color: #0071e3;
+    text-decoration: none;
+}
+
+.mic button.recording .icon-mic {
+    color: #ffffff;
+}
