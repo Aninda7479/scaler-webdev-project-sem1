@@ -2,8 +2,7 @@ const micBtn = document.getElementById('mic-btn');
 const statusText = document.getElementById('status');
 const journalList = document.getElementById('list');
 
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 let recognition;
 let recording = false;
@@ -30,6 +29,9 @@ function startRecording() {
 
   recognition.onresult = (event) => {
     for (const result of event.results) {
+
+      statusText.textContent += result[0].transcript + ' ';
+
       if (result.isFinal) {
         spokenText += result[0].transcript + ' ';
       }
@@ -42,10 +44,7 @@ function startRecording() {
     recording = false;
     micBtn.classList.remove('recording');
 
-    statusText.textContent =
-      event.error === 'not-allowed'
-        ? 'Mic access denied'
-        : 'Error: ' + event.error;
+    statusText.textContent = event.error === 'not-allowed' ? 'Mic access denied' : 'Error: ' + event.error;
   };
 
   recognition.onend = () => {
@@ -55,7 +54,6 @@ function startRecording() {
   };
 
   recognition.start();
-
   recording = true;
   micBtn.classList.add('recording');
   statusText.textContent = 'Listening...';
@@ -65,7 +63,6 @@ function stopRecording() {
   recording = false;
   micBtn.classList.remove('recording');
   statusText.textContent = 'Saving...';
-
   recognition.stop();
 }
 
@@ -97,9 +94,9 @@ function saveEntry() {
 }
 
 function getEntries() {
-  const saved = localStorage.getItem('journal_entries');
+  const stored = localStorage.getItem('journal_entries');
 
-  return JSON.parse(saved || '[]');
+  return JSON.parse(stored || '[]');
 }
 
 journalList.addEventListener('click', (event) => {
@@ -108,9 +105,9 @@ journalList.addEventListener('click', (event) => {
   if (!button) return;
 
   const id = Number(button.dataset.id);
-  const entries = getEntries().filter(entry => entry.id !== id);
+  const e = getEntries().filter(entry => entry.id !== id);
 
-  localStorage.setItem('journal_entries', JSON.stringify(entries));
+  localStorage.setItem('journal_entries', JSON.stringify(e));
   renderEntries();
 });
 
