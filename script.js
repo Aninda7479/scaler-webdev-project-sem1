@@ -123,20 +123,14 @@ function renderEntries() {
     const date = entry.date || 'Just now';
 
     return `
-      <div class="card">
-        <div class="topbar">
-          <time>${date}</time>
-
-          <div class="top-info">
-            <span>${words} words</span>
-            <button class="del" data-id="${entry.id}">Delete</button>
-          </div>
+          <div class="card">
+            <div class="topbar"><time>${date}</time>
+                <div class="top-info"><span>${words} words</span><button data-id="${entry.id}" class="del"> <i class="icon-trash"></i> Delete</button></div>
+            </div>
+            <section>
+                <p>${text}</p>
+            </section>
         </div>
-
-        <section>
-          <p>${text}</p>
-        </section>
-      </div>
     `;
   }).join('');
 }
