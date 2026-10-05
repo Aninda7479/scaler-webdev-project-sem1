@@ -81,10 +81,10 @@ header h1 {
 
 .list .card {
     background: #ffffffd1;
-    border: 1px solid #000000;
+    border: 1px solid #bbbbbb;
     border-radius: 20px;
     padding: 1.5rem 1.75rem;
-    box-shadow: 0 10px 30px #000000;
+    box-shadow: 0 10px 30px #727272;
 }
 
 .list .topbar {
