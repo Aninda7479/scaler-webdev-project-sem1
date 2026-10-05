@@ -75,7 +75,6 @@ header h1 {
 }
 
 .list {
-    width: 100%;
     max-width: 600px;
     display: flex;
     flex-direction: column;

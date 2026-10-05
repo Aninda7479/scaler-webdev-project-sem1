@@ -30,7 +30,7 @@ function startRecording() {
   recognition.onresult = (event) => {
     for (const result of event.results) {
 
-      statusText.textContent += result[0].transcript + ' ';
+      // statusText.textContent += result[0].transcript + ' ';
 
       if (result.isFinal) {
         spokenText += result[0].transcript + ' ';
@@ -119,7 +119,7 @@ function renderEntries() {
 
   journalList.innerHTML = entries.map(entry => {
     const text = entry.text || '';
-    const words = entry.words || text.trim().split(/\s+/).length;
+    const words = entry.words || text.trim().split(" ").length;
     const date = entry.date || 'Just now';
 
     return `
