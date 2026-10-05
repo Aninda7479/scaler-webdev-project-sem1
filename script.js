@@ -1,119 +1,144 @@
-const mic = document.getElementById('mic-btn');
-const label = document.getElementById('status');
-const feed = document.getElementById('list');
+const micBtn = document.getElementById('mic-btn');
+const statusText = document.getElementById('status');
+const journalList = document.getElementById('list');
 
-const SpeechAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = null;
-let active = false;
-let text = '';
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
 
-const readData = () => JSON.parse(localStorage.getItem('journal_entries') || '[]');
-const writeData = (v) => localStorage.setItem('journal_entries', JSON.stringify(v));
+let recognition;
+let recording = false;
+let spokenText = '';
 
-if (!SpeechAPI) {
-  mic.disabled = true;
-  label.textContent = 'Voice recognition not supported';
+if (!SpeechRecognition) {
+  micBtn.disabled = true;
+  statusText.textContent = 'Voice recognition not supported in this browser';
 }
 
-mic.onclick = () => {
-  if (!SpeechAPI) return;
+micBtn.addEventListener('click', () => {
+  if (!SpeechRecognition) return;
 
-  if (!active) {
-    text = '';
+  recording ? stopRecording() : startRecording();
+});
 
-    rec = new SpeechAPI();
-    rec.continuous = false;
-    rec.interimResults = false;
-    rec.lang = 'en-US';
+function startRecording() {
+  spokenText = '';
+  recognition = new SpeechRecognition();
 
-    rec.onresult = (e) => {
-      for (let i = 0; i < e.results.length; i++) {
-        if (e.results[i].isFinal) {
-          text += ' ' + e.results[i][0].transcript;
-        }
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = 'en-US';
+
+  recognition.onresult = (event) => {
+    for (const result of event.results) {
+      if (result.isFinal) {
+        spokenText += result[0].transcript + ' ';
       }
-    };
-
-    rec.onerror = (e) => {
-      // 'aborted' and 'no-speech' are natural terminations on mobile, ignore them
-      if (e.error === 'aborted' || e.error === 'no-speech') return;
-
-      active = false;
-      mic.classList.remove('recording');
-      label.textContent = e.error === 'not-allowed' ? 'Mic access denied' : `Error: ${e.error}`;
-    };
-
-    rec.onend = () => {
-      active = false;
-      mic.classList.remove('recording');
-      saveNote();
-    };
-
-    active = true;
-    mic.classList.add('recording');
-    label.textContent = 'Listening...';
-
-    try {
-      rec.start();
-    } catch (err) {
-      active = false;
-      mic.classList.remove('recording');
-      label.textContent = 'Tap to try again';
     }
-  } else {
-    active = false;
-    mic.classList.remove('recording');
-    label.textContent = 'Saving...';
+  };
 
-    try {
-      rec.stop();
-    } catch (err) {
-      saveNote();
-    }
-  }
-};
+  recognition.onerror = (event) => {
+    if (event.error === 'no-speech' || event.error === 'aborted') return;
 
-function saveNote() {
-  const clean = text.trim().replace(/\s+/g, ' ');
-  if (!clean) {
-    label.textContent = 'No voice detected';
+    recording = false;
+    micBtn.classList.remove('recording');
+
+    statusText.textContent =
+      event.error === 'not-allowed'
+        ? 'Mic access denied'
+        : 'Error: ' + event.error;
+  };
+
+  recognition.onend = () => {
+    recording = false;
+    micBtn.classList.remove('recording');
+    saveEntry();
+  };
+
+  recognition.start();
+
+  recording = true;
+  micBtn.classList.add('recording');
+  statusText.textContent = 'Listening...';
+}
+
+function stopRecording() {
+  recording = false;
+  micBtn.classList.remove('recording');
+  statusText.textContent = 'Saving...';
+
+  recognition.stop();
+}
+
+function saveEntry() {
+  const text = spokenText.trim().replace(/\s+/g, ' ');
+
+  if (!text) {
+    statusText.textContent = 'No voice detected';
     return;
   }
 
-  const list = readData();
-  list.unshift({
+  const entry = {
     id: Date.now(),
-    date: new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }),
-    text: clean.charAt(0).toUpperCase() + clean.slice(1) + '.',
-    words: clean.split(' ').length
-  });
+    date: new Date().toLocaleString([], {
+      dateStyle: 'short',
+      timeStyle: 'short'
+    }),
+    text: text.charAt(0).toUpperCase() + text.slice(1) + '.',
+    words: text.split(' ').length
+  };
 
-  writeData(list);
-  show();
-  label.textContent = 'Saved';
+  const entries = getEntries();
+
+  entries.unshift(entry);
+  localStorage.setItem('journal_entries', JSON.stringify(entries));
+
+  renderEntries();
+  statusText.textContent = 'Saved';
 }
 
-feed.onclick = (e) => {
-  const btn = e.target.closest('.del');
-  if (!btn) return;
-  writeData(readData().filter((item) => item.id !== Number(btn.dataset.id)));
-  show();
-};
+function getEntries() {
+  const saved = localStorage.getItem('journal_entries');
 
-function show() {
-  const list = readData();
-  feed.innerHTML = list.map((item) => `
-    <div class="card">
-      <div class="topbar">
-        <time>${item.date}</time>
-        <div class="top-info">
-          <span>${item.words || item.wordCount || 0} words</span>
-          <button class="del" data-id="${item.id}">Delete</button>
+  return JSON.parse(saved || '[]');
+}
+
+journalList.addEventListener('click', (event) => {
+  const button = event.target.closest('.del');
+
+  if (!button) return;
+
+  const id = Number(button.dataset.id);
+  const entries = getEntries().filter(entry => entry.id !== id);
+
+  localStorage.setItem('journal_entries', JSON.stringify(entries));
+  renderEntries();
+});
+
+function renderEntries() {
+  const entries = getEntries();
+
+  journalList.innerHTML = entries.map(entry => {
+    const text = entry.text || '';
+    const words = entry.words || text.trim().split(/\s+/).length;
+    const date = entry.date || 'Just now';
+
+    return `
+      <div class="card">
+        <div class="topbar">
+          <time>${date}</time>
+
+          <div class="top-info">
+            <span>${words} words</span>
+            <button class="del" data-id="${entry.id}">Delete</button>
+          </div>
         </div>
+
+        <section>
+          <p>${text}</p>
+        </section>
       </div>
-      <section><p>${item.text || item.cleanText || ''}</p></section>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
-show();
+renderEntries();
