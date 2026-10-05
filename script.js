@@ -50,6 +50,7 @@ function startRecording() {
   recognition.onend = () => {
     recording = false;
     micBtn.classList.remove('recording');
+    micBtn.classList.add('processing');
     saveEntry();
   };
 
@@ -62,6 +63,7 @@ function startRecording() {
 function stopRecording() {
   recording = false;
   micBtn.classList.remove('recording');
+  micBtn.classList.add('processing');
   statusText.textContent = 'Saving...';
   recognition.stop();
 }
@@ -91,6 +93,7 @@ function saveEntry() {
 
   renderEntries();
   statusText.textContent = 'Saved';
+  micBtn.classList.remove('processing');
 }
 
 function getEntries() {

@@ -57,7 +57,11 @@ header h1 {
     background-color: #f8392f;
     color: white;
     animation: pulse-ring 2s infinite ease-out;
-
+}
+.mic button.processing {
+    background-color: #f2e41d;
+    color: white;
+    animation: pulse-ring 2s infinite ease-out;
 }
 
 .icon-mic {
